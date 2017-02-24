@@ -15,5 +15,5 @@ php-composer:
 	sudo docker run -it --rm \
 		-u $(USER):$(GROUP) \
 		-v $(PWD)/www:/app \
-		qihoo.cloud/composer/composer:1.1-php5 \
+		composer:1.1-php5 \
 		install
