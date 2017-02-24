@@ -32,7 +32,6 @@ services:
   #     - default
   nginx:
     image: pressure_nginx:v1.0 
-    # image: qihoo.cloud/library/nginx 
     volumes:
       # 加载项目Nginx配置
       - ./nginx.conf:/etc/nginx/conf.d/php.conf:ro
