@@ -1,0 +1,54 @@
+# 压测平台的docker-compose环境打包
+version: '2'
+services:
+  fpm:
+    environment:
+      - DEBUG=true
+    image: pressure_php:v1.2
+    volumes:
+      # 加载额外的扩展配置
+      - ../www/simulate/conf/php/fpm/php_fpm.conf.basic:/usr/local/etc/php-fpm.d/www.conf:ro
+      # 挂载项目代码目录
+      - ../www:/var/www/html/web
+      # - ../wrk:/var/www/html/wrk
+    # expose:
+    #   - "9000"
+    networks:
+      - default
+  # fpm_2:
+  #   environment:
+  #     - DEBUG=true
+  #   image: pressure_php:v1.2
+  #   volumes:
+  #     # 加载额外的扩展配置
+  #     - ../www/simulate/conf/php/fpm/php_fpm2.conf:/usr/local/etc/php-fpm.d/www.conf:ro
+  #     - ../www/simulate/conf/php/fpm/zz-docker.conf:/usr/local/etc/php-fpm.d/zz-docker.conf:ro
+  #     # 挂载项目代码目录
+  #     - ../www:/var/www/html/web
+  #     #- ../wrk:/var/www/html/wrk
+  #   # expose:
+  #   #   - "9555"
+  #   networks:
+  #     - default
+  nginx:
+    image: pressure_nginx:v1.0 
+    # image: qihoo.cloud/library/nginx 
+    volumes:
+      # 加载项目Nginx配置
+      - ./nginx.conf:/etc/nginx/conf.d/php.conf:ro
+      # - ../www/simulate/conf/nginx/nginx.conf.basic:/etc/nginx/nginx.conf:ro
+      # 挂载项目代码目录, 根据Nginx的配置不同该目录有时可以忽略
+      - ../www:/var/www/html/web:ro
+    links:
+      # 关联容器, 在该容器中可以通过 `fpm.localhost` 域名访问另一个容器的端口
+      - fpm:fpm.localhost
+      # - fpm_2:fpm_2.localhost
+    ports:
+      # 将容器端口与宿主机绑定, 以便外部访问
+      - "${DEV_PORT}:8000"
+    networks:
+      - default
+networks:
+  default:
+    external:
+      name: ${DEV_USER}_default

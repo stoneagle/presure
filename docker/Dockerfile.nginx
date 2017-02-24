@@ -1,0 +1,7 @@
+FROM nginx
+
+COPY /www /var/www/html/web
+COPY /www/simulate/conf/nginx/nginx.conf.basic /etc/nginx/nginx.conf
+
+# 根据需要，设定环境权限
+# RUN chmod -R 0777 /var/www/html/web

@@ -1,0 +1,25 @@
+[global]
+error_log = /proc/self/fd/2
+
+[www]
+;输出日志到界面上
+access.log = /proc/self/fd/2
+clear_env = no
+catch_workers_output = yes
+
+user = www-data
+group = www-data
+listen = 0.0.0.0:9000
+ 
+pm = dynamic
+;容器资源默认申请未500MB
+pm.max_children = 20 
+pm.start_servers = 13
+pm.min_spare_servers = 10
+pm.max_spare_servers = 20
+pm.max_requests = 10240 
+;pm.process_idle_timeout = 10s;
+
+;文件句柄
+rlimit_files = 1024 
+

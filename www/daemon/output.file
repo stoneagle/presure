@@ -1,0 +1,6 @@
+    Latency   206.81ms  207.57ms   1.07s    83.07%
+  7575 requests in 1.00m, 1.48MB read
+Requests/sec:    126.11
+Transfer/sec:     25.16KB
+99%,805 ms
+99.99%,1071 ms

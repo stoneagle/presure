@@ -1,0 +1,8 @@
+FROM pressure_php
+
+# 安装扩展
+RUN ["apt-get", "update"]
+RUN ["apt-get", "install", "-y", "vim"]
+
+# 根据需要，设定环境权限
+# RUN chmod -R 0777 /var/www/html/web
