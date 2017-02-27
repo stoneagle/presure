@@ -10,6 +10,7 @@ class Error
     const ERR_VALID         = 100;
     const ERR_SAVE          = 101;
     const ERR_DEL           = 102;
+    const ERR_MODEL         = 103;
     const ERR_PROJECT_MODEL = 1000;
     const ERR_PROJECT_DEL   = 1001;
     const ERR_PROJECT_EXEC  = 1002;
@@ -20,6 +21,7 @@ class Error
         self::ERR_SERVER => "服务端错误",
         self::ERR_SAVE   => "存储失败",
         self::ERR_DEL    => "删除失败",
+        self::ERR_MODEL  => "对象查找失败",
     ];
 
     public static function msg($code)

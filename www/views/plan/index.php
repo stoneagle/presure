@@ -7,8 +7,7 @@ use app\assets\AppAsset;
 use yii\helpers\ArrayHelper;
 use \kartik\date\DatePicker;
 
-$this->title = '测试管理';
-$this->params['breadcrumbs'][] = ['label' => '计划管理', 'url' => ['/plan/index']];
+$this->title = '计划管理';
 $this->params['breadcrumbs'][] = $this->title;
 AppAsset::register($this);
 ?>
@@ -20,27 +19,13 @@ AppAsset::register($this);
          $gridColumns = [
                 "box" => [
                     'class' => 'yii\grid\CheckboxColumn',
-                    'name' => 'project_box',
+                    'name' => 'box',
                     'contentOptions' => [
                         'class' => 'data-id'
                     ],
                 ],
                 "id",
                 "name",
-                "url",
-                "init",
-                "incr",
-                "num",
-                [
-                    "attribute" => "status",
-                    "label" => "状态",
-                    'contentOptions' => ['width' => '10%'],
-                    //'filter' => Html::activeDropDownList($searchModel, '', $appList, ['class' => 'form-control']),
-                    'value' => function ($model) use($statusArr) {
-                        return ArrayHelper::getValue($statusArr, $model->status);
-                    },
-                ],
-                "desc",
                 [
                     'attribute' => 'ctime',
                     'contentOptions' => ['width' => '10%'],
@@ -77,43 +62,21 @@ AppAsset::register($this);
                     'header' => '操作',
                     'contentOptions' => ['style' => 'white-space: normal;', 'width' => '12%'],
                     'class' => 'yii\grid\ActionColumn',
-                    'template' => "{exec} {edit} {delete} {chart}",
+                    'template' => "{check} {edit} {delete}",
                     'buttons' => [
-                        'exec' => function ($url, $model) {
-                            if ($model->status == Project::STATUS_WAIT) {
-                                $ret = Html::a( 
-                                    "执行",
-                                    "/project/exec?id={$model->id}",
-                                    [
-                                        'data-pjax' => '0',
-                                        'class' => 'label label-primary handle',
-                                    ]
-                                );
-                            } else if ($model->status == Project::STATUS_EXEC) {
-                                $ret = Html::a( 
-                                    "暂停",
-                                    "/project/stop?id={$model->id}",
-                                    [
-                                        'data-pjax' => '0',
-                                        'class' => 'label label-primary handle',
-                                    ]
-                                );
-                            } else if ($model->status == Project::STATUS_FIN) {
-                                $ret = Html::a( 
-                                    "重启",
-                                    "/project/redo?id={$model->id}",
-                                    [
-                                        'data-pjax' => '0',
-                                        'class' => 'label label-primary handle',
-                                    ]
-                                );
-                            }
-                            return $ret; 
+                        'check' => function ($url, $model) {
+                            return Html::a(
+                            "测试详情",
+                            "/project/index?Project[plan_id]={$model->id}",
+                            [
+                                'data-pjax' => '0',
+                                'class' => 'label label-warning handle',
+                            ]);
                         },
                         'edit' => function ($url, $model) {
                             return Html::a( 
                                 "修改",
-                                "/project/update?id=".$model->id,
+                                "/plan/update?id=".$model->id,
                                 [
                                     'data-pjax' => '0',
                                     'class'     => 'label label-primary handle',
@@ -123,23 +86,14 @@ AppAsset::register($this);
                         'delete' => function ($url, $model) {
                             return Html::a( 
                                 "删除",
-                                "/project/delete",
+                                "/plan/delete",
                                 [
                                     'data-pjax' => '0',
-                                    'name'      => "project_delete",
+                                    'name'      => "plan_delete",
                                     'model_id'  => $model->id,
                                     'class'     => 'label label-primary handle',
                                 ]
                             );
-                        },
-                        'chart' => function ($url, $model) {
-                            return Html::a(
-                            "压测详情",
-                            "/action/index?Action[pid]={$model->id}",
-                            [
-                                'data-pjax' => '0',
-                                'class' => 'label label-warning handle',
-                            ]);
                         },
                     ]
                 ],
@@ -156,8 +110,7 @@ AppAsset::register($this);
                 ],
                 'toolbar' => [
                     //$fullExportMenu,
-                    Html::a('新建测试',['create?'.$_SERVER['QUERY_STRING']],['data-pjax'      => 0, 'class' => 'btn btn-success',]),
-                    Html::a('查看总图表',['chart?'.$_SERVER['QUERY_STRING']],['data-pjax'      => 0, 'class' => 'btn btn-success',]),
+                    Html::a('新建计划',['create?'.$_SERVER['QUERY_STRING']],['data-pjax'      => 0, 'class' => 'btn btn-success',]),
                 ],
                 'options' => ['class' => 'grid-view','style'=>'overflow:auto', 'id' => 'grid'],
                 'columns' => $gridColumns
@@ -169,7 +122,7 @@ AppAsset::register($this);
 
 <?php $this->beginBlock('js') ?>  
 $(function(){
-    $("[name='project_delete']").on('click', function (e) {
+    $("[name='plan_delete']").on('click', function (e) {
         e.preventDefault();
         href = $(this).attr("href");
         var post_data = {

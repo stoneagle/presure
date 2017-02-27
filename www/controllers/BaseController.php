@@ -3,9 +3,11 @@
 namespace app\controllers;
 
 use Yii;
+use app\models\Error;
 use yii\helpers\ArrayHelper;
 use yii\web\Controller;
 use yii\web\Response;
+use yii\widgets\ActiveForm;
 
 class BaseController extends Controller
 {
@@ -47,7 +49,12 @@ class BaseController extends Controller
             'line' => $e->getLine(),
         ];
         //Yii::info($this->logFormat("exception", $params), \LOG_CATEGORY::BACKEND_EXCEPTION);
-        return $this->echoJson($params, $e->getCode(), $e->getMessage());
+        if (empty($e->getCode)) {
+            $code = ERROR::ERR_MODEL;
+        } else {
+            $code = $e->getCode();
+        }
+        return $this->echoJson($params, $code, $e->getMessage());
     }
 
     public function getParamsByConf($conf_arr, $method_flag = "get")
@@ -68,5 +75,12 @@ class BaseController extends Controller
             $ret[$name] = $param;
         }
         return $ret;
+    }
+
+    // 传入model对象，返回参数校验结果，用于activeform的ajax参数校验
+    public function returnValidResponse($model)
+    {
+        Yii::$app->response->format = Response::FORMAT_JSON;
+        return ActiveForm::validate($model);
     }
 }

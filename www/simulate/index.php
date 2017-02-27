@@ -2,51 +2,42 @@
 
 $params = $_GET;
 
-switch ($params['type']) {
-    case "normal" :
-        // 常见延时
-        $rand = rand(200,400);
-        usleep(1000 * $rand);
-        var_dump("end");
-        break;
-    case "cpu" :
-        // 高CPU计算
-        $sum = 0;
-        for ($i = 0; $i < 1000000; $i++) {
-            $sum += $i;
-        }
-        var_dump($sum);
-        break;
-    case "big" :
-        // 大文件返回，初步规模是1M
-        $string = "abcdefghijklmnopqrstuvwxyz";
-        $result = "";
-        for ($i = 0; $i < 100; $i++) {
-            $result .= $string;
-        }
-        header('Content-type:text/json');
-        for ($i = 0; $i < 400; $i++) {
-            $final[] = $result;
-        }
-        $final = json_encode($final);
-        print_r($final);
-        break;
-    case "fib" :
-        $incr = $params['incr'];
-        if (is_null($incr) || empty($incr) || !is_numeric($incr)) {
-            $incr = 24;
-        }
-        $incr_max =  $incr + 2;
-        // 27-29，单次请求耗时平均在200-300ms
-        // 24-26，单次请求耗时平均在50ms
-        // 20-22，单词请求耗时凭据在5-7ms内
-         
-        $rand = rand($incr,$incr_max);
-        $result = fib2($rand);
-        print_r($result);
-        break;
+// fib模式模拟cpu计算消耗
+$incr = $params['incr'];
+if (is_null($incr) || empty($incr) || !is_numeric($incr)) {
+    $incr = 24;
+}
+$incr_max =  $incr + 2;
+// 27-29，单次请求耗时平均在200-300ms
+// 24-26，单次请求耗时平均在50ms
+// 22-24, 单次请求耗时平均在30ms
+// 20-22，单词请求耗时凭据在5-7ms内
+ 
+$rand = rand($incr,$incr_max);
+$result = fib2($rand);
+
+// 根据延时参数是否存在，进行sleep控制，单位毫秒
+$sleep = $params['sleep'];
+if (!is_null($sleep) && !empty($sleep)) {
+    usleep($sleep * 1000);
 }
 
+// 控制返回内容体积大小，单位是KB
+$size = $params['size'];
+$final = [];
+$string = "abcdefghijklmnopqrstuvwxyz0123";
+if (!is_null($size) && !empty($size)) {
+    for ($i = 0; $i < $size * 32; $i++) {
+        $final[] = $string;
+    }
+    $ret = json_encode($final);
+} else {
+    $ret = $string;
+}
+
+print_r($ret);
+
+// 数组实现
 function fibs1($n) {
     if ($n < 1)
         return - 1;
@@ -57,6 +48,7 @@ function fibs1($n) {
     return $a [$n];
 }
 
+// 递归实现
 function fib2($n) {
     if($n<1)
         return -1;

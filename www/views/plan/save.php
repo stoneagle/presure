@@ -5,22 +5,22 @@ use yii\widgets\ActiveForm;
 use app\assets\AppAsset;
 
 AppAsset::register($this);
-$this->params['breadcrumbs'][] = ['label' => '测试管理', 'url' => ['index?'.$_SERVER['QUERY_STRING']]];
+$this->params['breadcrumbs'][] = ['label' => '计划管理', 'url' => ['index']];
 $this->params['breadcrumbs'][] = $this->title;
 if ($model->isNewRecord) {
-    $href = "/project/create";
-    $this->title = '创建测试';
+    $href = "/plan/create";
+    $this->title = '创建计划';
 } else {
-    $href = "/project/update?id=".$id;
+    $href = "/plan/update?id=".$id;
     $this->params['breadcrumbs'][] = ['label' => $model->name];
-    $this->title = '更新测试';
+    $this->title = '更新计划';
 }
 
 $form = ActiveForm::begin([
     'id' => 'form',
-    'options' => ['class' => 'project'],
+    'options' => ['class' => 'plan'],
     'enableAjaxValidation' => true,
-    'validationUrl' => '/project/valid',
+    'validationUrl' => '/plan/valid',
 ])
 ?>
 <div class="channel">
@@ -30,22 +30,6 @@ $form = ActiveForm::begin([
     } 
     ?>
     <?= $form->field($model, 'name')->textInput(['placeholder' => '不能为空'])?>
-    <?= $form->field($model, 'url')->textInput([
-        //'readonly'=>($model->isNewRecord == true)? false : true
-    ])->hint('不能为空')?>
-    <?= $form->field($model, 'plan_id')->textInput([
-        'readonly' => true
-    ])->hint('不能为空')?>
-    <?= $form->field($model, 'init')->textInput([
-        //'readonly'=>($model->isNewRecord == true)? false : true
-    ])->hint('不能为空')?>
-    <?= $form->field($model, 'incr')->textInput([
-        //'readonly'=>($model->isNewRecord == true)? false : true
-    ])->hint('不能为空')?>
-    <?= $form->field($model, 'num')->textInput([
-        //'readonly'=>($model->isNewRecord == true)? false : true
-    ])->hint('不能为空')?>
-    <?= $form->field($model, 'desc')->textArea(['rows' => '6'])->label('描述'); ?>
     <div class="form-group">
         <?= Html::submitButton('提交', ['class' => 'btn btn-primary']) ?>
     </div>
@@ -73,9 +57,8 @@ $(function(){
                         confirmButtonColor: "#DD6B55",
                         confirmButtonText: "确定",
                     },function(){
-                        project_id = data.data['id'];
-                        plan_id = data.data['plan_id'];
-                        window.location.href = "/project/index?Project[id]=" + project_id + '&Project[plan_id]=' + plan_id;
+                        var id = data.data['id'];
+                        window.location.href = "/plan/index?Plan[id]=" + id;
                     });
                 } else {
                     swal("操作失败!", data.message, "error");
