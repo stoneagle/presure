@@ -56,8 +56,14 @@ class ProjectController extends BaseController
             $final_data['list'][] = [
                 'name' => $project_name,
                 'type' => "line",
-                'stack' => "总量",
+                //'stack' => "总量",
                 'data' => $chart_data['qps'],
+            ];
+            $final_data['avg'][] = [
+                'name' => $project_name,
+                'type' => "line",
+                //'stack' => "总量",
+                'data' => $chart_data['avg_resp'],
             ];
         }
 

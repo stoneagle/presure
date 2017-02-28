@@ -66,6 +66,7 @@ class Action extends BaseActiveRecord
             
             $ret['con'][] = $one['con'];
             $ret['qps'][] = $one['qps'];
+            $ret['avg_resp'][] = round($one['avg_resp']/1000,0);
             $error_arr = explode(',', $one['error']);
             $ret['error'][] = $error_arr[3];
         }

@@ -4,10 +4,10 @@ date_default_timezone_set("PRC");
 $base_path = dirname(dirname(realpath(__FILE__)));
 require($base_path."/library/autoload.php");
 
-$db_host = "";
-$db_name = "";
-$db_user = "";
-$db_pass = "";
+$db_host = "123.57.41.158";
+$db_name = "presure";
+$db_user = "root";
+$db_pass = "z20138502@wzy-360";
 
 $db_flag = true;
 while($db_flag) {
